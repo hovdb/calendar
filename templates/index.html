@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="refresh" content="3600">
+
+    <title>Calendar Events</title>
+    <style>
+        body {
+            background-color: #000;
+            background-image: url('/get_image');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center bottom;
+            color: #fff;
+            font-family: 'Copperplate', sans-serif;
+        }
+		.source-1 { background-color: rgba(255, 127, 80, 0.5) !important; }
+        .source-2 { background-color: rgba(173, 216, 230, 0.5) !important; }
+        .source-3 { background-color: rgba(160, 32, 240, 0.5) !important; }
+        .source-4 { background-color: rgba(50, 205, 50, 0.5) !important; }
+        .source-5 { background-color: rgba(128, 128, 128, 0.5) !important; }
+        .source-6 { background-color: rgba(255, 255, 0, 0.5) !important; }
+        /* Your CSS styles for the calendar table here... */
+
+
+    </style>
+</head>
+<body>
+    <h1><span id="current-time"></span></h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Summary</th>
+                <th>Start Time</th>
+                <th>Duration (minutes)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in events %}
+            <tr class="source-{{ event.source }}" style="background-color: rgba(0, 0, 0, 0);"> <!-- Set semi-transparent black background for table rows -->
+                <td>{{ event.summary }}</td>
+                <td>
+                    <span class="start-time-local">{{ event.start_time }}</span>
+                </td>
+                <td>{{ event.duration }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        function updateCurrentTime() {
+            const currentTimeElement = document.getElementById('current-time');
+            const now = new Date();
+            currentTimeElement.textContent = now.toLocaleString();
+        }
+
+        function rotateBackgroundImage() {
+            // Change the background image URL every X milliseconds
+            setInterval(function () {
+                document.body.style.backgroundImage = `url('/get_image?rand=${Math.random()}')`;
+            }, 60000);  // Change image every 60 seconds
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Update the current time every second
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000);
+
+            // Start rotating the background image
+            rotateBackgroundImage();
+
+            const startTimesLocal = document.querySelectorAll('.start-time-local');
+
+            startTimesLocal.forEach(function (startTimeLocal) {
+                const utcTime = new Date(startTimeLocal.textContent);
+                if (!isNaN(utcTime)) {
+                    startTimeLocal.textContent = utcTime.toLocaleString();
+                } else {
+                    // Handle invalid date format or empty values as needed
+                    startTimeLocal.textContent = "Invalid Date";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
