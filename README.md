@@ -8,7 +8,7 @@ create an images folder containing all the images you want to display in the cal
 
 https://calendar.google.com/calendar/ical/george.bush%40gmail.com/private-6c32453545663e44534e/basic.ics https://calendar.google.com/calendar/ical/joe.biden%40gmail.com/private-fdsfea08dd8c1c6f53f3/basic.ics
 
-The ics_url.txt can contain multiple ICS urls place the file in a folder.
+The ics_url.txt can contain multiple ICS urls.  Place the file in a folder (such as /Users/userx/Documents/ics/ics_url.txt).
 
 Now it is time to pull the DAKilla image: docker pull swedebear/dakilla
 
