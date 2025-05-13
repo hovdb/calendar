@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="refresh" content="3600">
-
+    <meta http-equiv="refresh" content="3600">
     <title>Calendar Events</title>
     <style>
         body {
@@ -13,76 +12,321 @@
             background-attachment: fixed;
             background-position: center bottom;
             color: #fff;
-            font-family: 'Copperplate', sans-serif;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
-		.source-1 { background-color: rgba(255, 127, 80, 0.5) !important; }
-        .source-2 { background-color: rgba(173, 216, 230, 0.5) !important; }
-        .source-3 { background-color: rgba(160, 32, 240, 0.5) !important; }
-        .source-4 { background-color: rgba(50, 205, 50, 0.5) !important; }
-        .source-5 { background-color: rgba(128, 128, 128, 0.5) !important; }
-        .source-6 { background-color: rgba(255, 255, 0, 0.5) !important; }
-        /* Your CSS styles for the calendar table here... */
 
+        /* Weather Widget Styles */
+        .weather-widget {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            margin: 0;
+            border-radius: 0;
+        }
 
+        .weather-header {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .date-time {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .weather-content {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .weather-current {
+            text-align: center;
+            padding: 5px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            min-width: 150px;
+        }
+
+        #current-weather {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #current-temp {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        #current-desc {
+            font-size: 1em;
+            text-transform: capitalize;
+        }
+
+        #current-time {
+            font-size: 0.8em;
+            color: #ccc;
+        }
+
+        .weather-forecast {
+            display: flex;
+            flex: 1;
+            justify-content: space-between;
+            gap: 5px;
+            overflow-x: auto;
+            padding: 0 10px;
+        }
+
+        .forecast-day {
+            text-align: center;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            min-width: 80px;
+        }
+
+        .forecast-date {
+            font-weight: bold;
+            font-size: 0.8em;
+            margin-bottom: 2px;
+        }
+
+        .forecast-time {
+            font-size: 0.7em;
+            color: #ccc;
+            margin-bottom: 2px;
+        }
+
+        .weather-icon {
+            width: 30px;
+            height: 30px;
+            margin: 2px 0;
+        }
+
+        /* Calendar Table Styles */
+        .calendar-container {
+            padding: 10px;
+            margin-top: 10px; /* Add some space above the table if legend is directly above */
+        }
+
+        /* Calendar Legend Styles */
+        .calendar-legend-container {
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 5px;
+            margin-bottom: 10px; /* Adjusted margin */
+            text-align: center; /* Center the legend items container */
+        }
+        .calendar-legend {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex; /* Use flexbox for horizontal layout */
+            flex-wrap: wrap; /* Allow wrapping if too many items */
+            justify-content: center; /* Center items within the flex container */
+        }
+        .calendar-legend li {
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            font-size: 0.9em;
+            margin-right: 15px; /* Add space between legend items */
+            margin-left: 15px; /* Add space between legend items */
+        }
+        .legend-color-box {
+            width: 15px;
+            height: 15px;
+            border: 1px solid #555; /* Optional: border around color box */
+            margin-right: 8px;
+            display: inline-block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        th, td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.1);
+            font-weight: bold;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        td {
+            font-size: 0.9em;
+            line-height: 1.2;
+        }
+
+        .source-1 { background-color: rgba(255, 127, 80, 0.5) !important; } /* Coral */
+        .source-2 { background-color: rgba(173, 216, 230, 0.5) !important; } /* Light Blue */
+        .source-3 { background-color: rgba(160, 32, 240, 0.5) !important; } /* Purple */
+        .source-4 { background-color: rgba(50, 205, 50, 0.5) !important; }  /* Lime Green */
+        .source-5 { background-color: rgba(255, 215, 0, 0.5) !important; }  /* Gold */
+        .source-6 { background-color: rgba(218, 112, 214, 0.5) !important; } /* Orchid */
+        .source-7 { background-color: rgba(0, 191, 255, 0.5) !important; }   /* Deep Sky Blue */
+
+        /* Make the table more compact on mobile */
+        @media (max-width: 768px) {
+            .weather-forecast {
+                flex-wrap: wrap;
+            }
+            
+            .forecast-day {
+                min-width: calc(50% - 10px);
+            }
+
+            .calendar-container {
+                padding: 5px;
+            }
+
+            th, td {
+                padding: 6px 8px;
+                font-size: 0.8em;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1><span id="current-time"></span></h1>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>Summary</th>
-                <th>Start Time</th>
-                <th>Duration (minutes)</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for event in events %}
-            <tr class="source-{{ event.source }}" style="background-color: rgba(0, 0, 0, 0);"> <!-- Set semi-transparent black background for table rows -->
-                <td>{{ event.summary }}</td>
-                <td>
-                    <span class="start-time-local">{{ event.start_time }}</span>
-                </td>
-                <td>{{ event.duration }}</td>
-            </tr>
+    <!-- Weather Widget -->
+    <div class="weather-widget">
+        <div class="weather-header">
+            <div id="current-date-time" class="date-time"></div>
+        </div>
+        <div class="weather-content">
+            <div class="weather-current">
+                <div id="current-weather">
+                    <img id="current-weather-icon" class="weather-icon" src="" alt="Weather icon">
+                    <div id="current-temp"></div>
+                    <div id="current-desc"></div>
+                    <div id="current-time"></div>
+                </div>
+            </div>
+            <div class="weather-forecast" id="weather-forecast"></div>
+        </div>
+    </div>
+
+    <!-- Calendar Legend -->
+    <div class="calendar-legend-container">
+        {# <h3>Calendar Legend</h3> #} {# Title Removed #}
+        <ul class="calendar-legend">
+            {% for cal in calendars %}
+            <li><span class="legend-color-box {{ cal.css_class }}"></span> {{ cal.name }}</li>
             {% endfor %}
-        </tbody>
-    </table>
+        </ul>
+    </div>
+
+    <!-- Calendar Table -->
+    <div class="calendar-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Summary</th>
+                    <th>Start Time</th>
+                    <th>Duration</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                <tr class="source-{{ event.source }}">
+                    <td>{{ event.summary }}</td>
+                    <td>{{ event.start_time }}</td>
+                    <td>{{ event.duration }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     <script>
-        function updateCurrentTime() {
-            const currentTimeElement = document.getElementById('current-time');
+        function updateDateTime() {
             const now = new Date();
-            currentTimeElement.textContent = now.toLocaleString();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            document.getElementById('current-date-time').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        function updateWeather() {
+            fetch('/weather')
+                .then(response => response.json())
+                .then(data => {
+                    // Update current weather
+                    const currentTemp = document.getElementById('current-temp');
+                    const currentDesc = document.getElementById('current-desc');
+                    const currentTime = document.getElementById('current-time');
+                    const currentIcon = document.getElementById('current-weather-icon');
+                    
+                    currentTemp.textContent = `${data.current.temp}°F`;
+                    currentDesc.textContent = data.current.description;
+                    currentTime.textContent = `Updated: ${data.current.time}`;
+                    currentIcon.src = `https://openweathermap.org/img/wn/${data.current.icon}@2x.png`;
+                    
+                    // Update forecast
+                    const forecastContainer = document.getElementById('weather-forecast');
+                    forecastContainer.innerHTML = '';
+                    
+                    data.forecast.forEach(forecast => {
+                        const forecastElement = document.createElement('div');
+                        forecastElement.className = 'forecast-day';
+                        forecastElement.innerHTML = `
+                            <div class="forecast-date">${forecast.date}</div>
+                            <div class="forecast-time">${forecast.time}</div>
+                            <img src="https://openweathermap.org/img/wn/${forecast.icon}.png" alt="Weather icon" class="weather-icon">
+                            <div>${forecast.temp}°F</div>
+                            <div>${forecast.description}</div>
+                        `;
+                        forecastContainer.appendChild(forecastElement);
+                    });
+                })
+                .catch(error => console.error('Error fetching weather:', error));
         }
 
         function rotateBackgroundImage() {
-            // Change the background image URL every X milliseconds
             setInterval(function () {
                 document.body.style.backgroundImage = `url('/get_image?rand=${Math.random()}')`;
-            }, 60000);  // Change image every 60 seconds
+            }, 60000);
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            // Update the current time every second
-            updateCurrentTime();
-            setInterval(updateCurrentTime, 1000);
+            // Update date/time every second
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
 
             // Start rotating the background image
             rotateBackgroundImage();
 
-            const startTimesLocal = document.querySelectorAll('.start-time-local');
-
-            startTimesLocal.forEach(function (startTimeLocal) {
-                const utcTime = new Date(startTimeLocal.textContent);
-                if (!isNaN(utcTime)) {
-                    startTimeLocal.textContent = utcTime.toLocaleString();
-                } else {
-                    // Handle invalid date format or empty values as needed
-                    startTimeLocal.textContent = "Invalid Date";
-                }
-            });
+            // Update weather immediately and then every 5 minutes
+            updateWeather();
+            setInterval(updateWeather, 300000);
         });
     </script>
 </body>
